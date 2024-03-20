@@ -7,10 +7,21 @@ using UnityEngine;
 [Serializable]
 public class ApplicationConfigDatas : ScriptableObject
 {
+    public GameConfig GameConfig;
     public DesignConfig DesignConfig;
     public BgmConfig BgmConfig;
     public SeConfig SeConfig;
 }
+
+[Serializable]
+public class GameConfig
+{
+    public float AddColorSpeed = 0.1f;
+    public float AddColorAmount = 0.01f;
+}
+
+
+
 
 [Serializable]
 public class DesignConfig
