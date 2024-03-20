@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7e6669b6ad427948a8a1afbefe7eb93, type: 3}
+  m_Name: ApplicationConfigDatas
+  m_EditorClassIdentifier: 
+  DesignConfig:
+    PlateMoveSecond: 0.1
+    PlateMoveDragAmount: 40
+    GameOverWaitSecond: 2
+    ScoreAnimationWaitSecond: 0.1
+  BgmConfig:
+    BgmAudioClip: {fileID: 8300000, guid: c90dbddbeb1cf43ce89d5beee642fc38, type: 3}
+  SeConfig:
+    LevelUpSeAudioClip: {fileID: 8300000, guid: 940f23d0750984b428f03b9e752f74dc, type: 3}
