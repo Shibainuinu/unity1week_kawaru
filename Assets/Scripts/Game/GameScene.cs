@@ -18,6 +18,7 @@ public class GameScene : MonoBehaviour
         Tutorial1,
 
         GameInit,
+        OrderAnim,
         ColorSelect,
         AddColor,
         Judge,
@@ -48,8 +49,14 @@ public class GameScene : MonoBehaviour
     [SerializeField] private ColorPlate yellowPlate;
 
     [SerializeField] private Image tempColorImage;
+    [SerializeField] private Image orderColorImage;
     [SerializeField] private Image selectColorImage;
+    [SerializeField] private Image judgeTempColorImage;
+    [SerializeField] private Image judgeOrderColorImage;
+    [SerializeField] private Text judgeScoreText;
+    [SerializeField] private GameObject judgeCanvasObj;
 
+    [SerializeField] private GameObject tapObj;
 
 
     private GameState gameState = GameState.None;
@@ -87,7 +94,7 @@ public class GameScene : MonoBehaviour
     private void Awake()
     {
 
-
+        judgeCanvasObj.SetActive(false);
 
 
         // 初期化終了時は入力待機にしておく
@@ -102,10 +109,12 @@ public class GameScene : MonoBehaviour
             case GameState.GameInit:
                 currentTempColor.c = currentTempColor.m = currentTempColor.y = 0.0f;
                 selectColorId = ColorId.None;
+                tapObj.SetActive(false);
                 isAddColor = false;
                 addColorTime = 0.0f;
                 ResetSelectColor();
                 UpdateSelectColor();
+                judgeCanvasObj.SetActive(false);
                 gameState = GameState.ColorSelect;
                 break;
 
@@ -143,6 +152,12 @@ public class GameScene : MonoBehaviour
             case GameState.Judge:
 
                 break;
+
+            case GameState.Result:
+
+                break;
+
+
         }
     }
 
@@ -151,6 +166,7 @@ public class GameScene : MonoBehaviour
     {
         if (gameState == GameState.ColorSelect)
         {
+            tapObj.SetActive(true);
             selectColorId = (ColorId)color;
             UpdateSelectColor();
         }
@@ -226,6 +242,30 @@ public class GameScene : MonoBehaviour
         }
     }
 
+
+    public void TapEndAddColorButton()
+    {
+        if (gameState == GameState.ColorSelect)
+        {
+            StartJudge();
+        }
+    }
+
+    private void StartJudge()
+    {
+        gameState = GameState.Judge;
+
+
+        // コピー
+        judgeTempColorImage.color = tempColorImage.color;
+        judgeOrderColorImage.color = orderColorImage.color;
+
+        // 得点計算
+        judgeScoreText.text = "後で計算する";
+
+        judgeCanvasObj.SetActive(true);
+
+    }
 
 
 
