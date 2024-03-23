@@ -20,6 +20,12 @@ public class GameConfig
     public float AddColorAmount = 0.01f;
     public float PerfectJudgeRange = 0.03f;
     public float JudgeSeverity = 0.05f;
+
+    [Range(0f, 1f)]
+    public float OrderColorMax = 1.0f;
+
+    [Range(0f, 1f)]
+    public float OrderColorMin = 0.0f;
 }
 
 [Serializable]

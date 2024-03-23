@@ -97,12 +97,14 @@ public class GameScene : MonoBehaviour
         switch (gameState) 
         {
             case GameState.GameInit:
+                orderColorImage.color = NewOrderColor();
                 currentTempColor.c = currentTempColor.m = currentTempColor.y = 0.0f;
                 selectColorId = ColorId.None;
                 tapObj.SetActive(false);
                 isAddColor = false;
                 addColorTime = 0.0f;
                 ResetSelectColor();
+                UpdateTempColor();
                 UpdateSelectColor();
                 judgeCanvasObj.SetActive(false);
                 gameState = GameState.ColorSelect;
@@ -149,6 +151,16 @@ public class GameScene : MonoBehaviour
 
 
         }
+    }
+
+    private Color NewOrderColor()
+    {
+        var color = new Color();
+        color.a = 1;
+        color.r = Random.Range(ApplicationConfigs.Config.GameConfig.OrderColorMin, ApplicationConfigs.Config.GameConfig.OrderColorMax);
+        color.g = Random.Range(ApplicationConfigs.Config.GameConfig.OrderColorMin, ApplicationConfigs.Config.GameConfig.OrderColorMax);
+        color.b = Random.Range(ApplicationConfigs.Config.GameConfig.OrderColorMin, ApplicationConfigs.Config.GameConfig.OrderColorMax);
+        return color;
     }
 
 
@@ -294,10 +306,6 @@ public class GameScene : MonoBehaviour
     }
 
 
-
-
-
-
     private async Task ScoreAnim(int score)
     {
         const int Size = 170;
@@ -340,6 +348,15 @@ public class GameScene : MonoBehaviour
         gameState = GameState.JudgeEnd;
     }
 
+
+    public void TapNextGameImage() 
+    {
+        if (gameState == GameState.JudgeEnd) 
+        {
+            judgeCanvasObj.SetActive(false);
+            gameState = GameState.GameInit;
+        }
+    }
 
 
 }

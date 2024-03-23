@@ -16,7 +16,9 @@ MonoBehaviour:
     AddColorSpeed: 0.1
     AddColorAmount: 0.01
     PerfectJudgeRange: 0.03
-    JudgeSeverity: 0.02
+    JudgeSeverity: 0.025
+    OrderColorMax: 0.8
+    OrderColorMin: 0.1
   DesignConfig:
     ScoreAnimSpeed: 0.03
   BgmConfig:
