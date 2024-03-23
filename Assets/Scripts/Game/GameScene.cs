@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -22,6 +23,7 @@ public class GameScene : MonoBehaviour
         ColorSelect,
         AddColor,
         Judge,
+        JudgeEnd,
         Result,
     }
 
@@ -48,13 +50,22 @@ public class GameScene : MonoBehaviour
     [SerializeField] private ColorPlate magentaPlate;
     [SerializeField] private ColorPlate yellowPlate;
 
+    [SerializeField] private Color potionColorCyan;
+    [SerializeField] private Color potionColorMagenta;
+    [SerializeField] private Color potionColorYellow;
+
     [SerializeField] private Image tempColorImage;
     [SerializeField] private Image orderColorImage;
-    [SerializeField] private Image selectColorImage;
+    [SerializeField] private Image selectColorImage1;
+    [SerializeField] private Image selectColorImage2;
     [SerializeField] private Image judgeTempColorImage;
     [SerializeField] private Image judgeOrderColorImage;
+
+    [SerializeField] private Image judgeScoreGaugeImage;
     [SerializeField] private Text judgeScoreText;
+
     [SerializeField] private GameObject judgeCanvasObj;
+
 
     [SerializeField] private GameObject tapObj;
 
@@ -66,30 +77,9 @@ public class GameScene : MonoBehaviour
 
     private bool isAddColor = false;
     private float addColorTime = 0.0f;
+    private int judgeScore = 0;
 
 
-    [SerializeField] private Canvas scoreCanvas;
-    [SerializeField] private GameObject puzzleParent;
-    [SerializeField] private GameObject numberPlatePrefab;
-
-    [SerializeField] private int puzzleAreaWidth = 100;
-    [SerializeField] private int puzzleAreaHeight = 100;            
-    [SerializeField] private Vector2 spacing; // マスとマスの間
-
-    [SerializeField] private Text scoreText1;
-    [SerializeField] private Text scoreText2;
-
-    [SerializeField] private ScoreControl scoreControl;
-
-
-
-
-
-
-    private Vector2[] squarePoints = new Vector2[16];   // 升目の座標データ
-    private List<NumberPlate> numberPlateList = new List<NumberPlate>();
-    private Vector2 plateSize = new Vector2();
-    private int score;
 
     private void Awake()
     {
@@ -186,26 +176,30 @@ public class GameScene : MonoBehaviour
 
         if (selectColorId == ColorId.None)
         {
-            selectColorImage.gameObject.SetActive(false);
+            selectColorImage1.transform.parent.gameObject.SetActive(false);
+            selectColorImage2.transform.parent.gameObject.SetActive(false);
         }
         else 
         {
-            selectColorImage.gameObject.SetActive(true);
+            selectColorImage1.transform.parent.gameObject.SetActive(true);
 
 
             switch (selectColorId) 
             {
                 case ColorId.Cyan:
-                    selectColorImage.color = cyanPlate.GetColor();
-                    cyanPlate.Select(true);
+                    selectColorImage1.color = potionColorCyan;
+                    selectColorImage2.color = potionColorCyan;
+//                    cyanPlate.Select(true);
                     break;
                 case ColorId.Magenta:
-                    selectColorImage.color = magentaPlate.GetColor();
-                    magentaPlate.Select(true);
+                    selectColorImage1.color = potionColorMagenta;
+                    selectColorImage2.color = potionColorMagenta;
+//                    magentaPlate.Select(true);
                     break;
                 case ColorId.Yellow:
-                    selectColorImage.color = yellowPlate.GetColor();
-                    yellowPlate.Select(true);
+                    selectColorImage1.color = potionColorYellow;
+                    selectColorImage2.color = potionColorYellow;
+//                    yellowPlate.Select(true);
                     break;
             }
         }
@@ -228,6 +222,8 @@ public class GameScene : MonoBehaviour
         if (gameState == GameState.ColorSelect)
         {
             isAddColor = true;
+            selectColorImage1.transform.parent.gameObject.SetActive(false);
+            selectColorImage2.transform.parent.gameObject.SetActive(true);
             gameState = GameState.AddColor;
         }
     }
@@ -238,6 +234,8 @@ public class GameScene : MonoBehaviour
         if (gameState == GameState.AddColor)
         {
             isAddColor = false;
+            selectColorImage1.transform.parent.gameObject.SetActive(true);
+            selectColorImage2.transform.parent.gameObject.SetActive(false);
             gameState = GameState.ColorSelect;
         }
     }
@@ -255,125 +253,93 @@ public class GameScene : MonoBehaviour
     {
         gameState = GameState.Judge;
 
+        var size = judgeScoreGaugeImage.rectTransform.sizeDelta;
+        size.x = 0;
+        judgeScoreGaugeImage.rectTransform.sizeDelta = size;
 
         // コピー
         judgeTempColorImage.color = tempColorImage.color;
         judgeOrderColorImage.color = orderColorImage.color;
 
-        // 得点計算
-        judgeScoreText.text = "後で計算する";
+        // 初期化
+        judgeScore = 0;
+        judgeScoreText.text = "0";
 
         judgeCanvasObj.SetActive(true);
+        judgeScore = GetScore();
+        ScoreAnim(judgeScore);
+    }
 
+
+    private int GetScore()
+    {
+        float diffR = Mathf.Abs(tempColorImage.color.r - orderColorImage.color.r);
+        float diffG = Mathf.Abs(tempColorImage.color.g - orderColorImage.color.g);
+        float diffB = Mathf.Abs(tempColorImage.color.b - orderColorImage.color.b);
+
+        Debug.Log($"r:{diffR} g:{diffG} b:{diffB}");
+
+        if (diffR <= ApplicationConfigs.Config.GameConfig.PerfectJudgeRange &&
+            diffG <= ApplicationConfigs.Config.GameConfig.PerfectJudgeRange &&
+            diffB <= ApplicationConfigs.Config.GameConfig.PerfectJudgeRange)
+        {
+            return 100;
+        }
+
+        int score = 99;
+        score -= (int)(diffR / ApplicationConfigs.Config.GameConfig.JudgeSeverity);
+        score -= (int)(diffG / ApplicationConfigs.Config.GameConfig.JudgeSeverity);
+        score -= (int)(diffB / ApplicationConfigs.Config.GameConfig.JudgeSeverity);
+        return score;
     }
 
 
 
 
-    // ナンバーをランダムで生成する
-    private void CreatePlate()
+
+
+    private async Task ScoreAnim(int score)
     {
-        // 初期化
-        bool[] points = new bool[16];
-        for (int i = 0; i < 16; ++i)
-        {
-            points[i] = true;
-        }
+        const int Size = 170;
+        int endSize = (int)(Size * (score / 100.0f));
+        float oneSize = Size / 100.0f;
+        float currentSize = 0;
+        float time = 0.0f;
+        int currentScore = 0;
 
-        // すでに置いてある所を検索
-        foreach (var plate in numberPlateList) 
+        bool isEnd = false;
+        while (!isEnd)
         {
-            points[plate.PosId] = false;
-        }
+            time += Time.deltaTime;
 
-        // 置ける場所の位置を検索
-        List<int> ids = new List<int>();
-        for (int i = 0; i < 16; ++i)
-        {
-            if (points[i]) { 
-                ids.Add(i);
+            while (time >= ApplicationConfigs.Config.DesignConfig.ScoreAnimSpeed) 
+            {
+                time -= ApplicationConfigs.Config.DesignConfig.ScoreAnimSpeed;
+                currentSize += oneSize;
+                var size = judgeScoreGaugeImage.rectTransform.sizeDelta;
+                size.x = (int)currentSize;
+                judgeScoreGaugeImage.rectTransform.sizeDelta = size;
+                judgeScoreText.text = (++currentScore).ToString();
             }
+
+            if (currentSize >= endSize)
+            {
+                isEnd = true;
+            }
+
+            await Task.Yield();
         }
 
-        int createPosId = ids[Random.Range(0, ids.Count)];
-
-        NumberPlate numberPlate = Instantiate(numberPlatePrefab, puzzleParent.transform).GetComponent<NumberPlate>();
-        numberPlate.SetSize(plateSize);
-        numberPlate.SetNumber(1);
-        numberPlate.SetPos(squarePoints[createPosId], createPosId);
-        numberPlateList.Add(numberPlate);
-    }
-
-
-
-    // 計算用の盤面の配列を生成
-    private NumberPlate[] GetCurrentPlateArray()
-    {
-        // 現在のプレートの配置を計算
-        NumberPlate[] plateArray = new NumberPlate[16];
-        for (int i = 0; i < 16; ++i)
         {
-            plateArray[i] = null;
+            var size = judgeScoreGaugeImage.rectTransform.sizeDelta;
+            size.x = endSize;
+            judgeScoreGaugeImage.rectTransform.sizeDelta = size;
+            judgeScoreText.text = score.ToString();
         }
 
-        foreach (var plate in numberPlateList)
-        {
-            plateArray[plate.PosId] = plate;
-        }
-
-        return plateArray;
-    }
-
-    private struct MoveData
-    {
-        //public NumberPlate plate;
-        //public int newPosId;
-        //public Vector2 vec2;
-        public int x;
-        public int y;
-        public bool isLevelUp;
-        public bool isDestroy;
-        public int addPoint;
+        gameState = GameState.JudgeEnd;
     }
 
 
-
-
-
-    public void SetScore(int score)
-    {
-        scoreControl.SetScore(score);
-        scoreText1.text = score.ToString();
-        scoreText2.text = score.ToString();
-        //Debug.Log(score);
-    }
-
-    public void OpenScoreboard()
-    {
-        scoreCanvas.gameObject.SetActive(true);
-    }
-
-    public void OnTapEndButton()
-    {
-        SceneManager.LoadScene("TitleScene");
-    }
-
-
-
-    //private Vector2 ConvertPosIdToVector2( int posId )
-    //{
-    //    return new Vector2(posId%4, posId/4);
-    //}
-
-    //private Vector2 ConvertVector2ToPosId(Vector2 vec2)
-    //{
-    //    return vec2.x + (vec2.y * 4);
-    //}
-
-
-    //private bool CheckValidVec(Vector2 vec) 
-    //{
-    //    return (0 <= vec.x && vec.x <= 3) && (0 <= vec.y && vec.y <= 3);
-    //}
 
 }

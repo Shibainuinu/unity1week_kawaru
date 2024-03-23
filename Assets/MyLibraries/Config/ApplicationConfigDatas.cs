@@ -18,23 +18,26 @@ public class GameConfig
 {
     public float AddColorSpeed = 0.1f;
     public float AddColorAmount = 0.01f;
+    public float PerfectJudgeRange = 0.03f;
+    public float JudgeSeverity = 0.05f;
 }
-
-
-
 
 [Serializable]
 public class DesignConfig
 {
-    [Tooltip("プレートの移動時間(秒)")]
-    public float PlateMoveSecond = 0.0f;
-    [Tooltip("プレートが移動し始めるドラッグ量")]
-    public int PlateMoveDragAmount = 50;
-    [Tooltip("ゲームオーバー時にウィンドウが出るまでの時間(秒)")]
-    public float GameOverWaitSecond = 2.0f;
-    [Tooltip("スコア更新時に次の桁の更新されるまでの時間(秒)")]
-    public float ScoreAnimationWaitSecond = 0.5f;
+    [Tooltip("調合結果のゲージのスピード")]
+    public float ScoreAnimSpeed = 0.1f;
+
+
 }
+
+
+
+
+
+
+
+
 
 [Serializable]
 public class BgmConfig

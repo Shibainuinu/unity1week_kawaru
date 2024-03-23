@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7e6669b6ad427948a8a1afbefe7eb93, type: 3}
   m_Name: ApplicationConfigDatas
   m_EditorClassIdentifier: 
+  GameConfig:
+    AddColorSpeed: 0.1
+    AddColorAmount: 0.01
+    PerfectJudgeRange: 0.03
+    JudgeSeverity: 0.02
   DesignConfig:
-    PlateMoveSecond: 0.1
-    PlateMoveDragAmount: 40
-    GameOverWaitSecond: 2
-    ScoreAnimationWaitSecond: 0.1
+    ScoreAnimSpeed: 0.03
   BgmConfig:
     BgmAudioClip: {fileID: 8300000, guid: c90dbddbeb1cf43ce89d5beee642fc38, type: 3}
   SeConfig:
