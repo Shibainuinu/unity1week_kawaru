@@ -29,6 +29,6 @@ MonoBehaviour:
   DesignConfig:
     ScoreAnimSpeed: 0.03
   BgmConfig:
-    BgmAudioClip: {fileID: 8300000, guid: c90dbddbeb1cf43ce89d5beee642fc38, type: 3}
+    BgmAudioClip: {fileID: 8300000, guid: 4d78ae9b340c14adc9b73f447f671995, type: 3}
   SeConfig:
-    LevelUpSeAudioClip: {fileID: 8300000, guid: 940f23d0750984b428f03b9e752f74dc, type: 3}
+    LevelUpSeAudioClip: {fileID: 8300000, guid: eea8d74064eec4d9e8c5fa8d9bb3c36f, type: 3}
