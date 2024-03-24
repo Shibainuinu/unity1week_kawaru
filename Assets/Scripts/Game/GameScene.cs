@@ -114,7 +114,7 @@ public class GameScene : MonoBehaviour
                 remainingMixingText.text = remainingMixing.ToString();
                 targetScore = NewTargetScore();
                 targetScoreText.text = $"{targetScore}“_ˆÈã";
-                successCountText.text = $"{successCount}‰ñ¬Œ÷";
+                successCountText.text = $"{successCount}";
                 ResetSelectColor();
                 UpdateTempColor();
                 UpdateSelectColor();
@@ -234,6 +234,7 @@ public class GameScene : MonoBehaviour
     {
         if (gameState == GameState.ColorSelect)
         {
+            PlaySE();
             selectColorImage1.gameObject.SetActive(true);
             addColorImage.gameObject.SetActive(true);
             selectColorId = (ColorId)color;
@@ -300,6 +301,7 @@ public class GameScene : MonoBehaviour
     {
         if (gameState == GameState.ColorSelect && remainingMixing > 0)
         {
+            PlaySE();
             remainingMixing--;
             remainingMixingText.text = remainingMixing.ToString();
             isAddColor = true;
@@ -330,6 +332,7 @@ public class GameScene : MonoBehaviour
     {
         if (gameState == GameState.ColorSelect)
         {
+            PlaySE();
             StartJudge();
         }
     }
@@ -426,6 +429,7 @@ public class GameScene : MonoBehaviour
     {
         if (gameState == GameState.JudgeWait) 
         {
+            PlaySE();
             judgeCanvasObj.SetActive(false);
             gameState = GameState.GameInit;
         }
@@ -435,8 +439,16 @@ public class GameScene : MonoBehaviour
     {
         if (gameState == GameState.JudgeWait)
         {
+            PlaySE();
             SceneManager.LoadScene("TitleScene");
         }
+    }
+
+    private void PlaySE()
+    {
+        var obj = new GameObject("SE");
+        var playSE = obj.AddComponent<PlaySE>();
+        playSE.PlaySe(ApplicationConfigs.Config.SeConfig.LevelUpSeAudioClip, FindObjectOfType<SoundManager>().volume);
     }
 
 }
