@@ -193,7 +193,30 @@ public class GameScene : MonoBehaviour
 
     private int NewTargetScore()
     {
-        return 10;
+        if (successCount <= 2)
+        {
+            return Random.Range( 60, 80 );
+        }
+        else if(successCount <= 4) 
+        {
+            return Random.Range(65, 85);
+        }
+        else if (successCount <= 6)
+        {
+            return Random.Range(75, 85);
+        }
+        else if (successCount <= 8)
+        {
+            return Random.Range(80, 90);
+        }
+        else if (successCount <= 10)
+        {
+            return Random.Range(88, 95);
+        }
+        else
+        {
+            return Random.Range(90, 98);
+        }
     }
 
 

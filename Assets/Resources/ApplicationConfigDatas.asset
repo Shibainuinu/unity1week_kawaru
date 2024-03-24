@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: ApplicationConfigDatas
   m_EditorClassIdentifier: 
   GameConfig:
-    AddColorSpeed: 0.1
+    MixingNum: 10
+    AddColorSpeed: 0.08
     AddColorAmount: 0.01
     PerfectJudgeRange: 0.03
     JudgeSeverity: 0.025
