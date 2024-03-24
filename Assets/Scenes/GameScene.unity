@@ -1116,7 +1116,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &335062518
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3549,6 +3549,8 @@ MonoBehaviour:
   nextGameImage: {fileID: 1670439608}
   serifText: {fileID: 1369681207}
   serifAnimator: {fileID: 1463200943}
+  goodObj: {fileID: 76876839}
+  badObj: {fileID: 319947452}
 --- !u!4 &1029106495
 Transform:
   m_ObjectHideFlags: 0

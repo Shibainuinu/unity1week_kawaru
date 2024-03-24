@@ -75,6 +75,10 @@ public class GameScene : MonoBehaviour
     [SerializeField] private Text serifText;
     [SerializeField] private Animator serifAnimator;
 
+    [SerializeField] private GameObject goodObj;
+    [SerializeField] private GameObject badObj;
+
+
     private GameState gameState = GameState.None;
 
     private ColorId selectColorId = ColorId.None;
@@ -124,6 +128,8 @@ public class GameScene : MonoBehaviour
                 serifText.text = NewSerif();
                 serifAnimator.SetTrigger("Start");
                 gameState = GameState.ColorSelect;
+                goodObj.gameObject.SetActive(false);
+                badObj.gameObject.SetActive(false);
                 break;
 
             case GameState.ColorSelect:
@@ -164,11 +170,13 @@ public class GameScene : MonoBehaviour
                     // ê¨å˜
                     nextGameImage.gameObject.SetActive(true);
                     successCount++;
+                    goodObj.gameObject.SetActive(true);
                 }
                 else 
                 {
                     // é∏îs
                     nextGameImage.gameObject.SetActive(false);
+                    badObj.gameObject.SetActive(true);
                 }
 
 
