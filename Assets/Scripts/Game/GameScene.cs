@@ -22,8 +22,9 @@ public class GameScene : MonoBehaviour
         OrderAnim,
         ColorSelect,
         AddColor,
-        Judge,
-        JudgeEnd,
+        JudgeAnim,
+        JudgeAnimEnd,
+        JudgeWait,
         Result,
     }
 
@@ -67,8 +68,11 @@ public class GameScene : MonoBehaviour
     [SerializeField] private GameObject judgeCanvasObj;
 
 
-    [SerializeField] private GameObject tapObj;
-
+    [SerializeField] private Text targetScoreText;
+    [SerializeField] private Text remainingMixingText;
+    [SerializeField] private Text successCountText;
+    [SerializeField] private Image addColorImage;
+    [SerializeField] private Image nextGameImage;
 
     private GameState gameState = GameState.None;
 
@@ -78,7 +82,9 @@ public class GameScene : MonoBehaviour
     private bool isAddColor = false;
     private float addColorTime = 0.0f;
     private int judgeScore = 0;
-
+    private int remainingMixing;
+    private int targetScore;
+    private int successCount = 0;
 
 
     private void Awake()
@@ -100,13 +106,19 @@ public class GameScene : MonoBehaviour
                 orderColorImage.color = NewOrderColor();
                 currentTempColor.c = currentTempColor.m = currentTempColor.y = 0.0f;
                 selectColorId = ColorId.None;
-                tapObj.SetActive(false);
+                addColorImage.gameObject.SetActive(false);
                 isAddColor = false;
                 addColorTime = 0.0f;
+                remainingMixing = ApplicationConfigs.Config.GameConfig.MixingNum;
+                remainingMixingText.text = remainingMixing.ToString();
+                targetScore = NewTargetScore();
+                targetScoreText.text = $"{targetScore}“_ˆÈã";
+                successCountText.text = $"{successCount}‰ñ¬Œ÷";
                 ResetSelectColor();
                 UpdateTempColor();
                 UpdateSelectColor();
                 judgeCanvasObj.SetActive(false);
+                nextGameImage.gameObject.SetActive(false);
                 gameState = GameState.ColorSelect;
                 break;
 
@@ -141,8 +153,24 @@ public class GameScene : MonoBehaviour
 
                 break;
 
-            case GameState.Judge:
+            case GameState.JudgeAnimEnd:
 
+                if (judgeScore >= targetScore)
+                {
+                    // ¬Œ÷
+                    nextGameImage.gameObject.SetActive(true);
+                    successCount++;
+                }
+                else 
+                {
+                    // Ž¸”s
+                    nextGameImage.gameObject.SetActive(false);
+                }
+
+
+
+
+                gameState = GameState.JudgeWait;
                 break;
 
             case GameState.Result:
@@ -163,12 +191,17 @@ public class GameScene : MonoBehaviour
         return color;
     }
 
+    private int NewTargetScore()
+    {
+        return 10;
+    }
+
 
     public void SelectColor(int color)
     {
         if (gameState == GameState.ColorSelect)
         {
-            tapObj.SetActive(true);
+            addColorImage.gameObject.SetActive(true);
             selectColorId = (ColorId)color;
             UpdateSelectColor();
         }
@@ -231,8 +264,10 @@ public class GameScene : MonoBehaviour
 
     public void TapImagePointerDown()
     {
-        if (gameState == GameState.ColorSelect)
+        if (gameState == GameState.ColorSelect && remainingMixing > 0)
         {
+            remainingMixing--;
+            remainingMixingText.text = remainingMixing.ToString();
             isAddColor = true;
             selectColorImage1.transform.parent.gameObject.SetActive(false);
             selectColorImage2.transform.parent.gameObject.SetActive(true);
@@ -245,6 +280,10 @@ public class GameScene : MonoBehaviour
     {
         if (gameState == GameState.AddColor)
         {
+            if (remainingMixing == 0)
+            {
+                addColorImage.color = new Color( 0.62f, 0.62f, 0.62f, 1.0f );
+            }
             isAddColor = false;
             selectColorImage1.transform.parent.gameObject.SetActive(true);
             selectColorImage2.transform.parent.gameObject.SetActive(false);
@@ -263,7 +302,7 @@ public class GameScene : MonoBehaviour
 
     private void StartJudge()
     {
-        gameState = GameState.Judge;
+        gameState = GameState.JudgeAnim;
 
         var size = judgeScoreGaugeImage.rectTransform.sizeDelta;
         size.x = 0;
@@ -345,18 +384,25 @@ public class GameScene : MonoBehaviour
             judgeScoreText.text = score.ToString();
         }
 
-        gameState = GameState.JudgeEnd;
+        gameState = GameState.JudgeAnimEnd;
     }
 
 
     public void TapNextGameImage() 
     {
-        if (gameState == GameState.JudgeEnd) 
+        if (gameState == GameState.JudgeWait) 
         {
             judgeCanvasObj.SetActive(false);
             gameState = GameState.GameInit;
         }
     }
 
+    public void TapEndImage()
+    {
+        if (gameState == GameState.JudgeWait)
+        {
+            SceneManager.LoadScene("TitleScene");
+        }
+    }
 
 }

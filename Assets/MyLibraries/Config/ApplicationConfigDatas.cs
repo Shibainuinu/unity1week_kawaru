@@ -16,6 +16,7 @@ public class ApplicationConfigDatas : ScriptableObject
 [Serializable]
 public class GameConfig
 {
+    public int MixingNum = 10;
     public float AddColorSpeed = 0.1f;
     public float AddColorAmount = 0.01f;
     public float PerfectJudgeRange = 0.03f;
