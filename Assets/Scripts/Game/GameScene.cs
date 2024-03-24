@@ -119,6 +119,7 @@ public class GameScene : MonoBehaviour
                 UpdateSelectColor();
                 judgeCanvasObj.SetActive(false);
                 nextGameImage.gameObject.SetActive(false);
+                selectColorImage1.gameObject.SetActive(false);
                 gameState = GameState.ColorSelect;
                 break;
 
@@ -224,6 +225,7 @@ public class GameScene : MonoBehaviour
     {
         if (gameState == GameState.ColorSelect)
         {
+            selectColorImage1.gameObject.SetActive(true);
             addColorImage.gameObject.SetActive(true);
             selectColorId = (ColorId)color;
             UpdateSelectColor();
@@ -244,12 +246,12 @@ public class GameScene : MonoBehaviour
 
         if (selectColorId == ColorId.None)
         {
-            selectColorImage1.transform.parent.gameObject.SetActive(false);
+            //selectColorImage1.transform.parent.gameObject.SetActive(false);
             selectColorImage2.transform.parent.gameObject.SetActive(false);
         }
         else 
         {
-            selectColorImage1.transform.parent.gameObject.SetActive(true);
+            //selectColorImage1.transform.parent.gameObject.SetActive(true);
 
 
             switch (selectColorId) 
