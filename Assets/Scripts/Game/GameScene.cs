@@ -117,7 +117,7 @@ public class GameScene : MonoBehaviour
                 remainingMixing = ApplicationConfigs.Config.GameConfig.MixingNum;
                 remainingMixingText.text = remainingMixing.ToString();
                 targetScore = NewTargetScore();
-                targetScoreText.text = $"{targetScore}ì_à»è„";
+                targetScoreText.text = $"{targetScore}";
                 successCountText.text = $"{successCount}";
                 ResetSelectColor();
                 UpdateTempColor();
