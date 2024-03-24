@@ -27,6 +27,8 @@ public class GameConfig
 
     [Range(0f, 1f)]
     public float OrderColorMin = 0.0f;
+
+    public string[] SerifArray;
 }
 
 [Serializable]

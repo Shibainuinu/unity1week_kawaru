@@ -20,6 +20,12 @@ MonoBehaviour:
     JudgeSeverity: 0.025
     OrderColorMax: 0.8
     OrderColorMin: 0.1
+    SerifArray:
+    - "\u30F2\u30AA\u30CD\u30AC\u30A4\u30B7\u30DE\u30B9"
+    - "\u30A4\u30C4\u30E2\u30CE\u30E8\u30ED\u30B7\u30AF"
+    - "\u30B3\u30EC\u30AC\u30DB\u30B7\u30A4\u30CA"
+    - "\u30A4\u30A4\u30CE\u30F2\u30BF\u30CE\u30E0\u30E8"
+    - "\u2026\u2026\u30B3\u30EC"
   DesignConfig:
     ScoreAnimSpeed: 0.03
   BgmConfig:

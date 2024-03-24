@@ -45,8 +45,6 @@ public class GameScene : MonoBehaviour
     }
 
 
-
-
     [SerializeField] private ColorPlate cyanPlate;
     [SerializeField] private ColorPlate magentaPlate;
     [SerializeField] private ColorPlate yellowPlate;
@@ -73,6 +71,9 @@ public class GameScene : MonoBehaviour
     [SerializeField] private Text successCountText;
     [SerializeField] private Image addColorImage;
     [SerializeField] private Image nextGameImage;
+
+    [SerializeField] private Text serifText;
+    [SerializeField] private Animator serifAnimator;
 
     private GameState gameState = GameState.None;
 
@@ -120,6 +121,8 @@ public class GameScene : MonoBehaviour
                 judgeCanvasObj.SetActive(false);
                 nextGameImage.gameObject.SetActive(false);
                 selectColorImage1.gameObject.SetActive(false);
+                serifText.text = NewSerif();
+                serifAnimator.SetTrigger("Start");
                 gameState = GameState.ColorSelect;
                 break;
 
@@ -170,7 +173,7 @@ public class GameScene : MonoBehaviour
 
 
 
-
+                serifAnimator.SetTrigger("End");
                 gameState = GameState.JudgeWait;
                 break;
 
@@ -220,6 +223,12 @@ public class GameScene : MonoBehaviour
         }
     }
 
+    private string NewSerif()
+    {
+        int max = ApplicationConfigs.Config.GameConfig.SerifArray.Length;
+
+        return ApplicationConfigs.Config.GameConfig.SerifArray[Random.Range(0, max)];
+    }
 
     public void SelectColor(int color)
     {

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657815, g: 0.49641192, b: 0.57481617, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3547,6 +3547,8 @@ MonoBehaviour:
   successCountText: {fileID: 708246471}
   addColorImage: {fileID: 2053467089}
   nextGameImage: {fileID: 1670439608}
+  serifText: {fileID: 1369681207}
+  serifAnimator: {fileID: 1463200943}
 --- !u!4 &1029106495
 Transform:
   m_ObjectHideFlags: 0
